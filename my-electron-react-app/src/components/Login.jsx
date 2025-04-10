@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usuarios from '../data/usuarios.json';
 import './Login.css';
+import Cronometro from './cronometro/Cronometro';
 
 function Login() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function Login() {
     }
 
     if (usuario.tipo === 'equipo') {
+      Cronometro.iniciar();
       navigate('/preguntas');
     } else if (usuario.tipo === 'admin') {
       navigate('/admin');
