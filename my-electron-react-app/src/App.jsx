@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Home from './pages/Home';
+import './App.css';
 
 function App() {
   return (
-    <h1 style={{ padding: '3rem', fontSize: '2rem' }}>¡Funciona Vite + React + Electron!</h1>
+    <Router>
+      <Home />
+    </Router>
   );
 }
-export default App;
 
+export default App;
