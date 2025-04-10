@@ -1,0 +1,45 @@
+.reloj-container {
+    font-family: 'Segment7Standard', monospace;
+    text-align: center;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 10px;
+    display: inline-block;
+  }
+  
+  .reloj-digital {
+    font-size: 3rem;
+    color: #0f0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    margin-bottom: 10px;
+  }
+  
+  .digitos {
+    background-color: #111;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .separador {
+    margin: 0 5px;
+  }
+  
+  .fecha {
+    font-size: 1.2rem;
+    color: #ccc;
+  }
+  
+  /* Efecto de display electrónico */
+  @font-face {
+    font-family: 'Segment7Standard';
+    src: url('Segment7Standard.otf') format('opentype');
+  }
+  
+  .reloj-digital.con-segundos {
+    animation: parpadeo 1s infinite;
+  }
+  
+  @keyframes parpadeo {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
