@@ -1,0 +1,33 @@
+{
+  "name": "my-electron-react-app",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"cross-env NODE_ENV=development vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build && electron-builder",
+    "preview": "vite preview"
+  },
+  "build": {
+    "appId": "com.myapp.electronvite",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ]
+  },
+  "dependencies": {
+    "react": "^18.x.x",
+    "react-dom": "^18.x.x"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.x.x",
+    "electron": "^30.x.x",
+    "electron-builder": "^24.x.x",
+    "vite": "^5.x.x",
+    "wait-on": "^7.2.0"
+  }
+}
