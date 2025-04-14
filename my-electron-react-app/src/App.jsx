@@ -1,14 +1,15 @@
-// src/App.jsx
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Admin from './pages/Admin';
 import Home from './pages/Home';
-import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Home />
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path ="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
