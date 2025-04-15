@@ -1,13 +1,15 @@
 import React from "react";
+import CronometroAdmin from "../components/cronometro/CronometroAdmin";
 
 function Admin() {
-    return (
-        <div className="admin-container">
-        <h1>Panel de Administración</h1>
-        <p>Aquí puedes gestionar los usuarios y las preguntas.</p>
-        {/* Aquí puedes agregar más funcionalidades para el panel de administración */}
-        </div>
-    );
-    }  
+  return (
+    <div style={{ color: "white" }}>
+        <CronometroAdmin />
+      <h1>Bienvenido Administrador</h1>
+      <p>Esta es la pagina de administracion</p>
+      
+    </div>
+  );
+}
 
 export default Admin;

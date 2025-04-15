@@ -2,7 +2,6 @@ import React from 'react';
 import fondo from '../resources/Fondo.jpg';
 import Login from '../components/Login';
 import './Home.css';
-import useCronometro from '../components/cronometro/useCronometro';
 
 function Home() {
 
@@ -21,7 +20,6 @@ function Home() {
     >
       <h1>Bienvenidos al desafio jaguar :3 </h1>
       <p>Inicia sesion con el usuario y contraseña indicadas.</p>
-
       <Login /> {/* Aquí delegamos toda la lógica y formulario */}
     </div>
   );
