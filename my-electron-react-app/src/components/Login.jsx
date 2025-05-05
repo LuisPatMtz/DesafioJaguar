@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import usuarios from '../data/usuarios.json';
 import './Login.css';
 import { CronometroContext } from './cronometro/CronometroContext';
 
@@ -11,27 +10,39 @@ function Login() {
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
 
-  const manejarLogin = () => {
-    const usuario = usuarios.find(
-      (u) => u.nombre.toLowerCase() === nombre.toLowerCase()
-    );
+  const manejarLogin = async () => {
+    setError('');
 
-    if (!usuario) {
-      setError('Usuario no encontrado');
-      return;
-    }
+    try {
+      const response = await fetch('https://v62mxrdy3g.execute-api.us-east-1.amazonaws.com/prod/loginRDS', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id_usuario: nombre,
+          contrasena: contrasena,
+        }),
+      });
 
-    if (usuario.contrasena !== contrasena) {
-      setError('Contraseña incorrecta');
-      return;
-    }
+      const data = await response.json();
 
-    if (usuario.tipo === 'equipo') {
-      console.log('Usuario encontrado:', usuario);
-      iniciarCronometro(usuario);
-      navigate('/preguntas');
-    } else if (usuario.tipo === 'admin') {
-      navigate('/admin');
+      if (!response.ok) {
+        setError(data.error || 'Error al iniciar sesión');
+        return;
+      }
+
+      localStorage.setItem('id_usuario', data.id_usuario);
+      localStorage.setItem('nombre', data.nombre);
+
+      if (data.redirect === '/panel-admin') {
+        navigate('/panel-admin');
+      } else {
+        // Si más adelante usas el cronómetro, descomenta esta línea
+        iniciarCronometro(localStorage.getItem('id_usuario'));
+        navigate(`/equipo-panel/${data.id_usuario}`);
+      }
+
+    } catch (err) {
+      setError('Error al conectar con el servidor');
     }
   };
 

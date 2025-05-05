@@ -1,20 +1,21 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Admin from './pages/Admin';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Preguntas from './pages/Preguntas';
+import AdminPage from './pages/AdminPage';
+import EquipoPanel from './pages/EquipoPanel';
 import { CronometroProvider } from './components/cronometro/CronometroContext';
 
 function App() {
   return (
-  <CronometroProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path ="/admin" element={<Admin />} />
-        <Route path="/preguntas" element={<Preguntas />} />
-      </Routes>
-    </BrowserRouter>
-  </CronometroProvider>
+    <CronometroProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/panel-admin" element={<AdminPage />} />
+          <Route path="/equipo-panel/:id" element={<EquipoPanel />} />
+        </Routes>
+      </Router>
+    </CronometroProvider>
   );
 }
 

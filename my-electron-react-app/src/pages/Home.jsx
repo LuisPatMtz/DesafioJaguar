@@ -18,9 +18,9 @@ function Home() {
         color: 'white',
       }}
     >
-      <h1>Bienvenidos al desafio jaguar :3 </h1>
-      <p>Inicia sesion con el usuario y contraseña indicadas.</p>
-      <Login /> {/* Aquí delegamos toda la lógica y formulario */}
+      <h1>Bienvenidos al desafío jaguar 🐆</h1>
+      <p>Inicia sesión con el usuario y contraseña indicadas.</p>
+      <Login />
     </div>
   );
 }

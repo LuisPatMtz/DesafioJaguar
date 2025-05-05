@@ -3,65 +3,110 @@ import { createContext, useState, useEffect, useRef } from 'react';
 export const CronometroContext = createContext();
 
 export const CronometroProvider = ({ children }) => {
-    const [tiempo, setTiempo] = useState(0);
-    const [activo, setActivo] = useState(false); // Cambiado de `null` a `false`
-    const [usuarioEquipo, setUsuarioEquipo] = useState(null);
-    const intervaloRef = useRef();
+    const [cronometros, setCronometros] = useState({});
+    const intervalosRef = useRef({});
 
-    // Función para iniciar el cronómetro
-    const iniciarCronometro = (usuario) => {
-        if (usuario?.tipo === 'equipo' && !activo) {
-            setUsuarioEquipo(usuario);
-            setActivo(true);
-            localStorage.setItem('cronometroUsuario', JSON.stringify(usuario));
-        }
-    };
-
-    // Función para detener el cronómetro
-    const detenerCronometro = () => {
-        clearInterval(intervaloRef.current);
-        setActivo(false);
-        setUsuarioEquipo(null);
-        setTiempo(0);
-        localStorage.removeItem('cronometroUsuario');
-        localStorage.removeItem('cronometroTiempo');
-    };
-
-    // Efecto para manejar el intervalo del cronómetro
+    // Cargar cronómetros guardados al iniciar
     useEffect(() => {
-        if (activo) {
-            intervaloRef.current = setInterval(() => {
-                setTiempo((prev) => prev + 1);
-            }, 1000);
-        } else {
-            clearInterval(intervaloRef.current);
-        }
-        return () => clearInterval(intervaloRef.current);
-    }, [activo]); // Dependencia: `activo`
-
-    // Efecto para sincronizar con localStorage al cargar
-    useEffect(() => {
-        const usuarioGuardado = localStorage.getItem('cronometroUsuario');
-        const tiempoGuardado = localStorage.getItem('cronometroTiempo');
-
-        if (usuarioGuardado) {
-            setUsuarioEquipo(JSON.parse(usuarioGuardado));
-            setTiempo(parseInt(tiempoGuardado) || 0);
-            setActivo(true); // Activa el cronómetro si hay un usuario guardado
-        }
+        const guardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
+        // Solo cargar los que tienen datos válidos
+        const cronometrosValidos = {};
+        Object.entries(guardados).forEach(([id, data]) => {
+            if (data && typeof data.tiempo === 'number' && data.usuario) {
+                cronometrosValidos[id] = data;
+            }
+        });
+        setCronometros(cronometrosValidos);
     }, []);
 
-    // Efecto para guardar el tiempo en localStorage cuando cambia
-    useEffect(() => {
-        if (activo) {
-            localStorage.setItem('cronometroTiempo', tiempo);
+    // Función para iniciar un cronómetro
+    const iniciarCronometro = (usuarioId, nombreUsuario) => {
+        setCronometros(prev => {
+            // Si ya existe y está activo, no hacer nada
+            if (prev[usuarioId]?.activo) return prev;
+            
+            return {
+                ...prev,
+                [usuarioId]: {
+                    tiempo: prev[usuarioId]?.tiempo || 0,
+                    activo: true,
+                    nombre: nombreUsuario || prev[usuarioId]?.nombre || usuarioId
+                }
+            };
+        });
+
+        // Guardar en localStorage
+        const cronometrosGuardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
+        cronometrosGuardados[usuarioId] = {
+            tiempo: cronometrosGuardados[usuarioId]?.tiempo || 0,
+            activo: true,
+            nombre: nombreUsuario || cronometrosGuardados[usuarioId]?.nombre || usuarioId
+        };
+        localStorage.setItem('cronometros', JSON.stringify(cronometrosGuardados));
+    };
+
+    // Función para detener un cronómetro
+    const detenerCronometro = (usuarioId) => {
+        setCronometros(prev => {
+            if (!prev[usuarioId]) return prev;
+            
+            return {
+                ...prev,
+                [usuarioId]: {
+                    ...prev[usuarioId],
+                    activo: false
+                }
+            };
+        });
+
+        // Limpiar intervalo
+        if (intervalosRef.current[usuarioId]) {
+            clearInterval(intervalosRef.current[usuarioId]);
+            delete intervalosRef.current[usuarioId];
         }
-    }, [tiempo, activo]);
+
+        // Actualizar localStorage
+        const cronometrosGuardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
+        if (cronometrosGuardados[usuarioId]) {
+            cronometrosGuardados[usuarioId].activo = false;
+            localStorage.setItem('cronometros', JSON.stringify(cronometrosGuardados));
+        }
+    };
+
+    // Efecto para manejar los intervalos
+    useEffect(() => {
+        // Iniciar intervalos para los activos
+        Object.entries(cronometros).forEach(([usuarioId, cronometro]) => {
+            if (cronometro.activo && !intervalosRef.current[usuarioId]) {
+                intervalosRef.current[usuarioId] = setInterval(() => {
+                    setCronometros(prev => ({
+                        ...prev,
+                        [usuarioId]: {
+                            ...prev[usuarioId],
+                            tiempo: prev[usuarioId].tiempo + 1
+                        }
+                    }));
+
+                    // Actualizar localStorage cada segundo
+                    const guardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
+                    if (guardados[usuarioId]) {
+                        guardados[usuarioId].tiempo += 1;
+                        localStorage.setItem('cronometros', JSON.stringify(guardados));
+                    }
+                }, 1000);
+            }
+        });
+
+        // Limpieza
+        return () => {
+            Object.entries(intervalosRef.current).forEach(([usuarioId, intervalo]) => {
+                clearInterval(intervalo);
+            });
+        };
+    }, [cronometros]);
 
     return (
-        <CronometroContext.Provider 
-            value={{ tiempo, activo, usuarioEquipo, iniciarCronometro, detenerCronometro }}
-        >
+        <CronometroContext.Provider value={{ cronometros, iniciarCronometro, detenerCronometro }}>
             {children}
         </CronometroContext.Provider>
     );
