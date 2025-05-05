@@ -1,113 +1,142 @@
-import { createContext, useState, useEffect, useRef } from 'react';
+import { createContext, useState, useEffect, useRef, useMemo } from 'react';
 
-export const CronometroContext = createContext();
+// Crear el contexto
+const CronometroContext = createContext();
 
-export const CronometroProvider = ({ children }) => {
+// Proveedor del contexto
+export function CronometroProvider({ children }) {
     const [cronometros, setCronometros] = useState({});
     const intervalosRef = useRef({});
 
     // Cargar cronómetros guardados al iniciar
     useEffect(() => {
         const guardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
-        // Solo cargar los que tienen datos válidos
         const cronometrosValidos = {};
+        
         Object.entries(guardados).forEach(([id, data]) => {
             if (data && typeof data.tiempo === 'number' && data.usuario) {
                 cronometrosValidos[id] = data;
             }
         });
+        
         setCronometros(cronometrosValidos);
     }, []);
 
-    // Función para iniciar un cronómetro
-    const iniciarCronometro = (usuarioId, nombreUsuario) => {
+const acciones = {
+    iniciarCronometro: (usuarioId, nombreUsuario) => {
+        console.log('Intentando iniciar cronómetro para:', usuarioId, 'con nombre:', nombreUsuario);
+        
         setCronometros(prev => {
             // Si ya existe y está activo, no hacer nada
-            if (prev[usuarioId]?.activo) return prev;
+            if (prev[usuarioId]?.activo) {
+                console.log('Cronómetro ya activo para:', usuarioId);
+                return prev;
+            }
             
-            return {
+            // Crear nuevo estado
+            const nuevoEstado = {
                 ...prev,
                 [usuarioId]: {
                     tiempo: prev[usuarioId]?.tiempo || 0,
                     activo: true,
-                    nombre: nombreUsuario || prev[usuarioId]?.nombre || usuarioId
+                    nombre: nombreUsuario || prev[usuarioId]?.nombre || `Equipo ${usuarioId}`,
+                    usuario: nombreUsuario || prev[usuarioId]?.usuario || usuarioId // Mantener compatibilidad
                 }
             };
+            
+            // Eliminar entrada "null" si existe
+            if (nuevoEstado.null) {
+                delete nuevoEstado.null;
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('cronometros', JSON.stringify(nuevoEstado));
+            console.log('Nuevo estado guardado:', nuevoEstado);
+            
+            return nuevoEstado;
         });
-
-        // Guardar en localStorage
-        const cronometrosGuardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
-        cronometrosGuardados[usuarioId] = {
-            tiempo: cronometrosGuardados[usuarioId]?.tiempo || 0,
-            activo: true,
-            nombre: nombreUsuario || cronometrosGuardados[usuarioId]?.nombre || usuarioId
-        };
-        localStorage.setItem('cronometros', JSON.stringify(cronometrosGuardados));
-    };
-
-    // Función para detener un cronómetro
-    const detenerCronometro = (usuarioId) => {
+    },
+    
+    detenerCronometro: (usuarioId) => {
         setCronometros(prev => {
             if (!prev[usuarioId]) return prev;
             
-            return {
+            const nuevoEstado = {
                 ...prev,
                 [usuarioId]: {
                     ...prev[usuarioId],
                     activo: false
                 }
             };
-        });
-
-        // Limpiar intervalo
-        if (intervalosRef.current[usuarioId]) {
+            
             clearInterval(intervalosRef.current[usuarioId]);
             delete intervalosRef.current[usuarioId];
-        }
+            
+            localStorage.setItem('cronometros', JSON.stringify(nuevoEstado));
+            return nuevoEstado;
+        });
+    }
+};
 
-        // Actualizar localStorage
-        const cronometrosGuardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
-        if (cronometrosGuardados[usuarioId]) {
-            cronometrosGuardados[usuarioId].activo = false;
-            localStorage.setItem('cronometros', JSON.stringify(cronometrosGuardados));
-        }
-    };
+// No necesitas useMemo si no hay dependencias externas que cambien
 
     // Efecto para manejar los intervalos
     useEffect(() => {
-        // Iniciar intervalos para los activos
+        // Primero limpia todos los intervalos existentes
+        Object.values(intervalosRef.current).forEach(intervalo => {
+            clearInterval(intervalo);
+        });
+        intervalosRef.current = {}; // Resetear el objeto de referencias
+    
+        // Luego crear nuevos intervalos para los cronómetros activos
         Object.entries(cronometros).forEach(([usuarioId, cronometro]) => {
-            if (cronometro.activo && !intervalosRef.current[usuarioId]) {
+            if (cronometro.activo) {
                 intervalosRef.current[usuarioId] = setInterval(() => {
-                    setCronometros(prev => ({
-                        ...prev,
-                        [usuarioId]: {
-                            ...prev[usuarioId],
-                            tiempo: prev[usuarioId].tiempo + 1
-                        }
-                    }));
-
-                    // Actualizar localStorage cada segundo
-                    const guardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
-                    if (guardados[usuarioId]) {
-                        guardados[usuarioId].tiempo += 1;
+                    setCronometros(prev => {
+                        // Verificar si el cronómetro sigue activo
+                        if (!prev[usuarioId]?.activo) return prev;
+                        
+                        const nuevoTiempo = prev[usuarioId].tiempo + 1;
+                        
+                        // Actualizar localStorage
+                        const guardados = JSON.parse(localStorage.getItem('cronometros') || '{}');
+                        guardados[usuarioId] = {
+                            ...guardados[usuarioId],
+                            tiempo: nuevoTiempo
+                        };
                         localStorage.setItem('cronometros', JSON.stringify(guardados));
-                    }
+    
+                        return {
+                            ...prev,
+                            [usuarioId]: {
+                                ...prev[usuarioId],
+                                tiempo: nuevoTiempo
+                            }
+                        };
+                    });
                 }, 1000);
             }
         });
-
-        // Limpieza
+    
         return () => {
-            Object.entries(intervalosRef.current).forEach(([usuarioId, intervalo]) => {
+            // Limpieza al desmontar
+            Object.values(intervalosRef.current).forEach(intervalo => {
                 clearInterval(intervalo);
             });
         };
     }, [cronometros]);
 
+    const valor = useMemo(() => ({
+        cronometros,
+        ...acciones
+    }), [cronometros]);
+
     return (
-        <CronometroContext.Provider value={{ cronometros, iniciarCronometro, detenerCronometro }}>
+        <CronometroContext.Provider value={valor}>
             {children}
         </CronometroContext.Provider>
     );
-};
+}
+
+// Exportar el contexto y el proveedor
+export { CronometroContext };

@@ -10,6 +10,10 @@ function Login() {
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
 
+  const inicio = (id,nombre) => {
+    iniciarCronometro(id,nombre);
+  };
+
   const manejarLogin = async () => {
     setError('');
 
@@ -36,8 +40,8 @@ function Login() {
       if (data.redirect === '/panel-admin') {
         navigate('/panel-admin');
       } else {
-        // Si más adelante usas el cronómetro, descomenta esta línea
-        iniciarCronometro(localStorage.getItem('id_usuario'));
+        inicio(data.id_usuario,data.nombre);
+        localStorage.setItem('cronometro', JSON.stringify(data.cronometro));
         navigate(`/equipo-panel/${data.id_usuario}`);
       }
 
