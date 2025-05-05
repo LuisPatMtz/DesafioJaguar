@@ -1,13 +1,35 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import './EquipoPanel.css';
 
 function EquipoPanel() {
-  const { id } = useParams(); // obtiene el id de la URL
+  const targetUrl = 'https://desafiojaguar.zapto.org/';
+
+  // Debug: Imprime la ruta en consola para verificar
+  const backgroundImage = '/images/jaguar-bg.png';
+  console.log('Ruta de la imagen:', backgroundImage); // Verifica en la consola del navegador
+
+  const handleClick = () => {
+    window.location.href = targetUrl;
+  };
 
   return (
-    <div>
-      <h2>Bienvenido equipo: {id}</h2>
-      <p>Este es tu panel de participante en el Desafío Jaguar 🐆</p>
+    <div 
+      className="jaguar-minimal-container"
+      style={{ 
+        backgroundImage: `url(${backgroundImage})`,
+        border: '2px solid red' // ⚠️ Borde temporal para debug 
+      }}
+    >
+      <h1>Bienvenido al desafío Jaguar 3.0</h1>
+      <div className="divider"></div>
+      <div onClick={handleClick} className="qr-minimal-wrapper">
+        <img 
+          src="/images/qr-jaguar-transparente.png" 
+          alt="QR Jaguar" 
+          className="qr-minimal-image"
+        />
+      </div>
+      <p>Escaneea el siguiente código QR para comenzar</p>
     </div>
   );
 }

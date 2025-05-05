@@ -1,0 +1,37 @@
+/* Reset de márgenes y relación de aspecto */
+.jaguar-minimal-container {
+    background-image: url('/images/jaguar-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: fixed; /* Cubre toda la pantalla sin scroll */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden; /* Evita barras de scroll */
+  }
+  
+  /* Elementos flexibles */
+  .qr-minimal-image {
+    width: min(80vw, 300px); /* Máximo 300px pero se reduce en móviles */
+    height: auto;
+  }
+  
+  /* Textos responsivos sin límites fijos */
+  .jaguar-minimal-container h1 {
+    font-size: 6vw; /* Escala con el ancho de la pantalla */
+    margin-bottom: 2vh; /* Usa unidades de viewport */
+  }
+  
+  .jaguar-minimal-container p {
+    font-size: max(12px, 2vw);
+  }
