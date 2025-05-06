@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import './EquipoPanel.css';
 
 function EquipoPanel() {
@@ -11,8 +12,23 @@ function EquipoPanel() {
   const handleClick = () => {
     window.location.href = targetUrl;
   };
+=======
+import { useParams } from 'react-router-dom';
+import { CronometroContext } from '../components/cronometro/CronometroContext';
+
+
+function EquipoPanel() {
+  const { detenerCronometro} = React.useContext(CronometroContext); // obtiene el contexto del cronómetro
+  const { id } = useParams(); // obtiene el id de la URL
+>>>>>>> a3b75ceef4bd9a263b1e149c2ed3618a564bf441
+
+  const detener  = () =>{
+    detenerCronometro(id)
+    console.log('deteniedo cronometro')
+  };
 
   return (
+<<<<<<< HEAD
     <div 
       className="jaguar-minimal-container"
       style={{ 
@@ -30,6 +46,12 @@ function EquipoPanel() {
         />
       </div>
       <p>Escaneea el siguiente código QR para comenzar</p>
+=======
+    <div>
+      <h2>Bienvenido equipo: {id}</h2>
+      <button onClick={detener}>pausa</button>
+      <p>Este es tu panel de participante en el Desafío Jaguar 🐆</p>
+>>>>>>> a3b75ceef4bd9a263b1e149c2ed3618a564bf441
     </div>
   );
 }
