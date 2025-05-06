@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import { CronometroContext } from './cronometro/CronometroContext';
 
 function Login() {
+  const {iniciarCronometro} = useContext(CronometroContext);  
   const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
+
+  const inicio = (id,nombre) => {
+    iniciarCronometro(id,nombre);
+  };
 
   const manejarLogin = async () => {
     setError('');
@@ -34,8 +40,8 @@ function Login() {
       if (data.redirect === '/panel-admin') {
         navigate('/panel-admin');
       } else {
-        // Si más adelante usas el cronómetro, descomenta esta línea
-        // Cronometro.iniciar();
+        inicio(data.id_usuario,data.nombre);
+        localStorage.setItem('cronometro', JSON.stringify(data.cronometro));
         navigate(`/equipo-panel/${data.id_usuario}`);
       }
 

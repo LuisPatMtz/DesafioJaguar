@@ -8,6 +8,11 @@
       "nombre": "admin",
       "contrasena": "admin",
       "tipo": "admin"
+    },
+    {
+      "nombre": "equipo2",
+      "contrasena": "equipo2",
+      "tipo": "equipo"
     }
   ]
   
