@@ -1,24 +1,27 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { CronometroContext } from '../components/cronometro/CronometroContext';
-
+import React, { useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import { CronometroContext } from '../components/cronometro/CronometroContext'
+import AsistenciaStatus from '../components/asistenciaStatus'
 
 function EquipoPanel() {
-  const { detenerCronometro} = React.useContext(CronometroContext); // obtiene el contexto del cronómetro
-  const { id } = useParams(); // obtiene el id de la URL
+  const { detenerCronometro } = useContext(CronometroContext)
+  const { id } = useParams() // ej. 'equipo1'
 
-  const detener  = () =>{
+  const detener = () => {
     detenerCronometro(id)
-    console.log('deteniedo cronometro')
-  };
+    console.log('Cronómetro detenido para', id)
+  }
 
   return (
     <div>
       <h2>Bienvenido equipo: {id}</h2>
-      <button onClick={detener}>pausa</button>
+
+      <AsistenciaStatus teamId={id} />
+
+      <button onClick={detener}>Pausar cronómetro</button>
       <p>Este es tu panel de participante en el Desafío Jaguar 🐆</p>
     </div>
-  );
+  )
 }
 
-export default EquipoPanel;
+export default EquipoPanel
