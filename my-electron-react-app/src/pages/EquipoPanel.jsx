@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom'
 import QRCode from 'react-qr-code'
 import AsistenciaStatus from '../components/asistenciaStatus'
 import RandomQuestionPanel from '../components/panelPreguntas'
+import EtapaFisicaPanel from '../components/etapaFisica/etapaFisicaPanel' // importa tu siguiente etapa
 import './EquipoPanel.css'
 
 export default function EquipoPanel() {
   const { id } = useParams()
-  const [attendance, setAttendance] = useState({ confirmed: 0, total: 0 })
-  const [started, setStarted]       = useState(false)
+  const [attendance, setAttendance]   = useState({ confirmed: 0, total: 0 })
+  const [started, setStarted]         = useState(false)
   const [correctCount, setCorrectCount] = useState(0)
   const MAX_QUESTIONS = 5
 
@@ -28,16 +29,11 @@ export default function EquipoPanel() {
 
           <div className="equipo-panel__grid">
             <div className="equipo-panel__qr">
-              <QRCode
-                value="https://desafiojaguar.zapto.org/"
-                size={300}
-                level="M"
-              />
+              <QRCode value="https://desafiojaguar.zapto.org/" size={300} level="M" />
               <p className="equipo-panel__qr-text">
                 Escanea para ir a desafiojaguar.zapto.org
               </p>
             </div>
-
             <div className="equipo-panel__instructions-box">
               <p>
                 Bienvenido a la tercera edición del Desafío Jaguar, más
@@ -67,8 +63,8 @@ export default function EquipoPanel() {
         </>
       )}
 
-      {/* ===== POST-START: ETAPA DE PREGUNTA ===== */}
-      {started && (
+      {/* ===== POST-START ===== */}
+      {started && correctCount < MAX_QUESTIONS && (
         <>
           <h2 className="equipo-panel__title">Etapa de pregunta</h2>
           <p className="equipo-panel__subtitle">
@@ -86,6 +82,11 @@ export default function EquipoPanel() {
             Aciertos: {correctCount} / {MAX_QUESTIONS}
           </div>
         </>
+      )}
+
+      {/* ===== ETAPA FÍSICA ===== */}
+      {started && correctCount >= MAX_QUESTIONS && (
+        <EtapaFisicaPanel teamId={id} />
       )}
     </div>
   )

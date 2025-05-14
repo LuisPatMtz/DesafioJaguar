@@ -1,10 +1,10 @@
+// src/components/panelPreguntas.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './RandomQuestionPanel.css';
 
-const RandomQuestionPanel = ({ teamId, onComplete }) => {
+export default function RandomQuestionPanel({ teamId, onCorrect }) {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -12,23 +12,26 @@ const RandomQuestionPanel = ({ teamId, onComplete }) => {
   const hasFetched = useRef(false);
 
   // Registra cada respuesta en la base
-  const recordResponse = useCallback(async (correct, preguntaId, materiaId) => {
-    const payload = { equipoId: teamId, preguntaId, materiaId, correcta: correct };
-    try {
-      await fetch(
-        'https://v62mxrdy3g.execute-api.us-east-1.amazonaws.com/prod/recordResponseRDS',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }
-      );
-    } catch (err) {
-      console.error('Error recording response:', err);
-    }
-  }, [teamId]);
+  const recordResponse = useCallback(
+    async (correct, preguntaId, materiaId) => {
+      const payload = { equipoId: teamId, preguntaId, materiaId, correcta: correct };
+      try {
+        await fetch(
+          'https://v62mxrdy3g.execute-api.us-east-1.amazonaws.com/prod/recordResponseRDS',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          }
+        );
+      } catch (err) {
+        console.error('Error recording response:', err);
+      }
+    },
+    [teamId]
+  );
 
-  // Obtiene un nuevo lote de preguntas (8)
+  // Obtiene un nuevo lote de preguntas
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -42,7 +45,7 @@ const RandomQuestionPanel = ({ teamId, onComplete }) => {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ equipoId: teamId })
+          body: JSON.stringify({ equipoId: teamId }),
         }
       );
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -53,9 +56,9 @@ const RandomQuestionPanel = ({ teamId, onComplete }) => {
       }
 
       // Normaliza materiaId
-      const enriched = data.map(q => ({
+      const enriched = data.map((q) => ({
         ...q,
-        materiaId: q.materiaId ?? q.materia_id
+        materiaId: q.materiaId ?? q.materia_id,
       }));
 
       setQuestions(enriched);
@@ -74,74 +77,72 @@ const RandomQuestionPanel = ({ teamId, onComplete }) => {
     fetchQuestions();
   }, [fetchQuestions]);
 
-  // Selección de opción
+  // Maneja selección de opción
   const handleOptionSelect = (opt) => {
     if (showFeedback) return;
     const current = questions[currentIndex];
     setSelectedOption(opt);
     setShowFeedback(true);
+
+    // registra en DB
     recordResponse(opt.correcta, current.id, current.materiaId);
+
+    // notifica al padre si es correcta
+    if (opt.correcta) {
+      onCorrect?.();
+    }
   };
 
-  // Avanza o recarga lote
+  // Avanza a la siguiente pregunta o recarga lote
   const handleNext = () => {
-    const wasCorrect = selectedOption.correcta;
-    const newCorrect = correctCount + (wasCorrect ? 1 : 0);
-    setCorrectCount(newCorrect);
-
-    // Al llegar a 5 aciertos, finaliza
-    if (newCorrect >= 5) {
-      onComplete?.();
-      return;
-    }
-
     const nextIndex = currentIndex + 1;
-    // Si quedan preguntas en el lote, avanzamos
     if (nextIndex < questions.length) {
       setCurrentIndex(nextIndex);
       setSelectedOption(null);
       setShowFeedback(false);
     } else {
-      // si se acabaron, pedimos otro lote
       fetchQuestions();
     }
   };
 
-  // Render
+  // Renderizado condicional
   if (isLoading) return <div className="loading">Cargando preguntas...</div>;
-  if (error) return (
-    <div className="error">
-      <p>Error: {error}</p>
-      <button onClick={fetchQuestions}>Reintentar</button>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="error">
+        <p>Error: {error}</p>
+        <button onClick={fetchQuestions}>Reintentar</button>
+      </div>
+    );
 
   const current = questions[currentIndex];
   if (!current) return <div>No se encontró la pregunta</div>;
 
   return (
     <div className="question-panel">
-      <h2>Pregunta Aleatoria</h2>
-      <small>Equipo ID: {teamId}</small>
-      <div className="progress">
-        {`Aciertos: ${correctCount}/5`}
-      </div>
-
       <div className="question-container">
         <h3>{current.enunciado}</h3>
         <div className="options-container">
           {current.opciones.map((op, idx) => (
             <button
               key={idx}
-              className={`option-btn${selectedOption===op?' selected':''}${showFeedback&&op.correcta?' correct':''}${showFeedback&&selectedOption===op&&!op.correcta?' incorrect':''}`}
+              className={`option-btn${
+                selectedOption === op ? ' selected' : ''
+              }${showFeedback && op.correcta ? ' correct' : ''}${
+                showFeedback && selectedOption === op && !op.correcta
+                  ? ' incorrect'
+                  : ''
+              }`}
               onClick={() => handleOptionSelect(op)}
               disabled={showFeedback}
-            >{op.texto}</button>
+            >
+              {op.texto}
+            </button>
           ))}
         </div>
 
         {showFeedback && (
-          <div className={`feedback ${selectedOption.correcta?'correct':'incorrect'}`}>
+          <div className="feedback">
             <p>{selectedOption.correcta ? '¡Correcto!' : 'Incorrecto'}</p>
             <p>{current.justificacion}</p>
             <button onClick={handleNext}>Siguiente Pregunta</button>
@@ -150,6 +151,4 @@ const RandomQuestionPanel = ({ teamId, onComplete }) => {
       </div>
     </div>
   );
-};
-
-export default RandomQuestionPanel;
+}
