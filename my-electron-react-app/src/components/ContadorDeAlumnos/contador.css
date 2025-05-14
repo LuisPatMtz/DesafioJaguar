@@ -1,0 +1,48 @@
+/* Estilos generales */
+.contador-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f0f8ff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #333;
+    font-size: 1.5rem;
+  }
+  
+  .contador-display {
+    font-size: 3rem;
+    margin: 20px 0;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+  
+  .contador-botones button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .contador-botones button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Estilo para el botón de reiniciar */
+  .contador-botones button:last-child {
+    background-color: #e74c3c;
+  }
+  
+  .contador-botones button:last-child:hover {
+    background-color: #c0392b;
+  }

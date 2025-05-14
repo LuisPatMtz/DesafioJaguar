@@ -18,13 +18,13 @@ export function CronometroProvider({ children }) {
                 cronometrosValidos[id] = data;
             }
         });
-        
         setCronometros(cronometrosValidos);
-    }, []);
+        console.log('Cronómetros cargados desde localStorage:', cronometrosValidos); //DEBUG
+    }, []); // Dependencias vacías para cargar solo al inicio
 
 const acciones = {
     iniciarCronometro: (usuarioId, nombreUsuario) => {
-        console.log('Intentando iniciar cronómetro para:', usuarioId, 'con nombre:', nombreUsuario);
+        console.log('Intentando iniciar cronómetro para:', usuarioId, 'con nombre:', nombreUsuario);//DEBUG
         
         setCronometros(prev => {
             // Si ya existe y está activo, no hacer nada
