@@ -1,5 +1,4 @@
 import React from 'react';
-import CronometroAdmin from "../components/cronometro/CronometroAdmin";
 
 function AdminPage() {
   return (

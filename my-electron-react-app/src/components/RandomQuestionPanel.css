@@ -1,107 +1,103 @@
+/* src/components/RandomQuestionPanel.css */
+
+/* 1) Panel principal ocupa todo el ancho de su padre */
 .question-panel {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* 2) Ocultamos título, ID y barra interna de progreso */
+.question-panel > h2,
+.question-panel > small,
+.question-panel > .progress {
+  display: none;
+}
+
+/* 3) Contenedor de pregunta estilizado */
 .question-container {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 15px;
+  background: transparent; /* el padre ya da el fondo */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
 }
 
+/* 4) Enunciado grande, centrado y blanco */
+.question-container h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0;
+  color: #fff;
+  text-align: center;
+}
+
+/* 5) Lista de opciones en columna */
 .options-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 1rem;
 }
 
+/* 6) Botones de opción: fondo blanco, texto oscuro, borde redondeado */
 .option-btn {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background: #f1f3f5;
-  cursor: pointer;
+  background: #fff;
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
   text-align: left;
-  transition: all 0.2s;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.option-btn:hover {
-  background: #e9ecef;
+/* Hover más claro */
+.option-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.8);
 }
 
+/* Estado seleccionado */
 .option-btn.selected {
-  background: #d0ebff;
-  border-color: #74c0fc;
+  outline: 2px solid #007bff;
 }
 
+/* Feedback: acierto / fallo */
 .option-btn.correct {
-  background: #d3f9d8;
-  border-color: #40c057;
-  color: #2b8a3e;
+  background: #4caf50;
+  color: #fff;
 }
-
 .option-btn.incorrect {
-  background: #ffd3d3;
-  border-color: #ff8787;
-  color: #c92a2a;
+  background: #f44336;
+  color: #fff;
 }
 
+/* 7) Ocultamos el área de feedback interno (si no la quieres) */
+/* .feedback { display: none; } */
+
+/* 8) Si quieres dejar algo de feedback, dale estilo ligero */
 .feedback {
-  padding: 15px;
-  border-radius: 5px;
-  margin-top: 20px;
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #fff;
 }
-
-.feedback.correct {
-  background: #d3f9d8;
-  color: #2b8a3e;
+.feedback p {
+  margin: 0.5rem 0;
 }
-
-.feedback.incorrect {
-  background: #ffd3d3;
-  color: #c92a2a;
-}
-
 .feedback button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background: #228be6;
-  color: white;
+  background: #007bff;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
-.feedback button:hover {
-  background: #1c7ed6;
-}
-
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #495057;
-}
-
-.error {
-  background: #fff3bf;
-  color: #e67700;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.error button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background: #f76707;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+/* 9) Asegura que los inputs (botones) ocupen el 100% */
+.option-btn,
+.feedback button {
+  width: 100%;
+  box-sizing: border-box;
 }

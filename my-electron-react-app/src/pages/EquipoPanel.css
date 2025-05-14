@@ -1,0 +1,108 @@
+/* src/pages/EquipoPanel.css */
+
+html, body {
+  overflow: hidden;
+}
+
+.equipo-panel {
+  position: relative;
+  background: url('../resources/fondopanel1.png') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  font-family: 'Montserrat', sans-serif;
+  overflow-y: auto;      /* permite scroll vertical si el contenido excede */
+}
+
+/* 2. Título centrado arriba */
+.equipo-panel__title {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  margin-bottom: 1.5rem;
+  color: #222;
+  text-align: center;
+}
+
+/* 3. Grid para QR + caja de instrucciones */
+.equipo-panel__grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* 4. Estilos QR: fondo blanco, padding, tamaño fijo */
+.equipo-panel__qr {
+  flex: 0 0 300px;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.equipo-panel__qr svg {
+  width: 100% !important;
+  height: auto  !important;
+}
+
+.equipo-panel__qr-text {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+/* 5. Caja de instrucciones: semitransparente, texto blanco, alineado a la izquierda */
+.equipo-panel__instructions-box {
+  flex: 0 0 300px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  color: #fff;
+  text-align: justify;      /* alineación normal para evitar grandes espacios */
+  line-height: 1.5;
+  hyphens: auto;         /* cortes de palabra automáticos */
+  letter-spacing: normal;
+}
+
+/* 6. Asistencia en flujo normal, sin posicionamiento absoluto */
+.equipo-panel__attendance-wrapper {
+  position: static;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.equipo-panel__attendance-wrapper button {
+  margin-top: 0.5rem;
+}
+
+/* 7. Botón de inicio (si aplica) en flujo normal */
+.equipo-panel__start {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* 8. Panel de preguntas */
+.equipo-panel__question {
+  margin-top: 2rem;
+}
+
+/* 9. Ajustes responsive para pantallas pequeñas */
+@media (max-width: 700px) {
+  .equipo-panel__grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .equipo-panel__qr,
+  .equipo-panel__instructions-box {
+    flex: 1 1 auto;
+    max-width: 90%;
+  }
+}

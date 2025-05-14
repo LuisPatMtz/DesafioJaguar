@@ -1,3 +1,7 @@
+html, body {
+  overflow: hidden;
+}
+
 .home-container {
     text-align: center;
     padding: 3rem;
