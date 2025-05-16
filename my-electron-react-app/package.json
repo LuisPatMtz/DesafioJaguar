@@ -20,6 +20,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "react": "^18.x.x",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "^18.x.x",
     "react-qr-code": "^2.0.15",
     "react-router-dom": "^7.5.0"

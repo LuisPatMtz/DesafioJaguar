@@ -1,20 +1,113 @@
-/* src/components/etapaFisica/etapaFisicaPanel.css */
 .etapa-fisica-panel {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 800px;
+  width: 100%;
+  max-width: 900px;
   margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   text-align: center;
 }
+
 .etapa-fisica-panel__title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+  color: #222;
 }
+
 .etapa-fisica-panel__subtitle {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   margin-bottom: 1.5rem;
+  color: #333;
 }
-.etapa-fisica-panel__content p {
+
+.wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.spin-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .1s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.spin-button:hover:enabled {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.modal-overlay {
+  position: fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  background: rgba(0,0,0,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+.modal-box {
+  background:#fff;
+  padding:2rem;
+  border-radius:10px;
+  max-width:500px;
+  width:90%;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25);
+}
+
+.modal-box h3 {
+  margin-top:0;
+  font-size:1.5rem;
+  color:#222;
+}
+
+.modal-box ul {
+  list-style:disc inside;
+  margin:1rem 0;
+  padding:0;
+}
+
+.modal-box li,
+.modal-box p {
+  font-size:1rem;
+  margin:.5rem 0;
+  color:#333;
+}
+
+.modal-box button {
+  display:block;
+  margin:1.5rem auto 0;
+  background-color:#28a745;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:.75rem 1.25rem;
+  font-size:1rem;
+  cursor:pointer;
+  transition:background-color .2s ease;
+}
+
+.modal-box button:hover {
+  background-color:#218838;
+}
+
+@media(max-width:600px){
+  .etapa-fisica-panel {
+    margin:1rem;
+    padding:1rem;
+  }
+  .wheel-container { gap:.75rem; }
+  .spin-button { width:100%; }
+  .modal-box { padding:1rem; }
 }
