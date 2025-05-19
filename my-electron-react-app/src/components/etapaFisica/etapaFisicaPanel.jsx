@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Wheel } from 'react-custom-roulette'
 import './etapaFisicaPanel.css'
+import { verifyKey } from '../../utils/verifyKey'
 
 export default function EtapaFisicaPanel({
   teamId,
@@ -10,7 +11,6 @@ export default function EtapaFisicaPanel({
   round,
   onComplete
 }) {
-  // colores definitivos
   const realColors = [
     '#FF6B6B', '#6BCB77', '#4D96FF',
     '#FFD93D', '#9D4EDD', '#FF6AC1',
@@ -23,59 +23,79 @@ export default function EtapaFisicaPanel({
     'Llave 7','Llave 8','Retos de carrera'
   ]
 
-  const [mustSpin, setMustSpin]    = useState(false)
-  const [prizeNumber, setPrizeNumber] = useState(0)
-  const [modalType, setModalType]  = useState(null)
-  const [selectedKey, setSelectedKey] = useState('')
+  // Estados
+  const [mustSpin, setMustSpin]           = useState(false)
+  const [prizeNumber, setPrizeNumber]     = useState(0)
+  const [currentWinner, setCurrentWinner] = useState(null)
+  const [modalType, setModalType]         = useState(null)
+  const [selectedKey, setSelectedKey]     = useState('')
+  const [passwordInput, setPasswordInput] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
-  // cada vez que cambie `round`, lanzamos un nuevo giro
+  // Lanzar giro cuando cambie round (y no haya modal o ganador pendiente)
   useEffect(() => {
+    if (modalType !== null || currentWinner !== null) return
+
     const available = segments
       .map((_, i) => i)
       .filter(i => !usedIndices.includes(i))
     if (!available.length) return
+
     const next = available[Math.floor(Math.random() * available.length)]
     setPrizeNumber(next)
     setMustSpin(true)
-  }, [round])
+  }, [round, modalType, currentWinner, segments, usedIndices])
 
   const handleStop = () => {
     setMustSpin(false)
-    onUseIndex(prizeNumber)  // notifico al padre que este índice ya se usó
+    setCurrentWinner(prizeNumber)
 
     const choice = segments[prizeNumber]
-    if (choice === 'Desafíos físicos')        setModalType('fisicos')
-    else if (choice === 'Retos de carrera') setModalType('carrera')
-    else {
+    if (choice === 'Desafíos físicos') {
+      setModalType('fisicos')
+    } else if (choice === 'Retos de carrera') {
+      setModalType('carrera')
+    } else {
       setSelectedKey(choice)
+      setPasswordInput('')
+      setPasswordError('')
+      setModalType('password')
+    }
+  }
+
+  const handlePasswordAccept = () => {
+    if (verifyKey(teamId, selectedKey, passwordInput)) {
       setModalType('llave')
+    } else {
+      setPasswordError('Contraseña incorrecta')
     }
   }
 
   const closeModal = () => {
-    setModalType(null)
+    onUseIndex(currentWinner)
     onComplete()
+    setModalType(null)
+    setCurrentWinner(null)
   }
 
-  // reconstruimos `data` a partir de usedIndices y prizeNumber
   const data = useMemo(() => {
     return segments.map((opt, i) => {
-      const used = usedIndices.includes(i)
+      const isWinner = currentWinner === i
+      const isUsed   = usedIndices.includes(i) || isWinner
       return {
         option: opt,
         style: {
-          backgroundColor: used
+          backgroundColor: isUsed
             ? realColors[i]
             : '#ccc',
           textColor: '#fff',
-          border:
-            !mustSpin && prizeNumber === i
-              ? '4px solid #fff'
-              : 'none'
+          border: isWinner
+            ? '4px solid #fff'
+            : 'none'
         }
       }
     })
-  }, [segments, realColors, usedIndices, mustSpin, prizeNumber])
+  }, [segments, realColors, usedIndices, currentWinner])
 
   return (
     <div className="etapa-fisica-panel">
@@ -97,7 +117,22 @@ export default function EtapaFisicaPanel({
         />
       </div>
 
-      {/* modales idénticos a antes */}
+      {modalType === 'password' && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Introduce la contraseña para {selectedKey}</h3>
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={e => setPasswordInput(e.target.value)}
+              placeholder="Contraseña"
+            />
+            {passwordError && <p className="error">{passwordError}</p>}
+            <button onClick={handlePasswordAccept}>Aceptar</button>
+          </div>
+        </div>
+      )}
+
       {modalType === 'llave' && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -106,6 +141,7 @@ export default function EtapaFisicaPanel({
           </div>
         </div>
       )}
+
       {modalType === 'fisicos' && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -120,6 +156,7 @@ export default function EtapaFisicaPanel({
           </div>
         </div>
       )}
+
       {modalType === 'carrera' && (
         <div className="modal-overlay">
           <div className="modal-box">
