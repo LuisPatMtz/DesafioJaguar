@@ -1,0 +1,49 @@
+.admin-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.admin-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.admin-status {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.admin-status.error {
+  color: crimson;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.admin-table thead {
+  background: #333;
+  color: #fff;
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.admin-table tbody tr:hover {
+  background: #eaeaea;
+}

@@ -1,6 +1,6 @@
 // src/pages/EquipoPanel.jsx
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import QRCode from 'react-qr-code'
 import AsistenciaStatus from '../components/asistenciaStatus'
 import RandomQuestionPanel from '../components/panelPreguntas'
@@ -9,6 +9,7 @@ import './EquipoPanel.css'
 
 export default function EquipoPanel() {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   // — Asistencia —
   const [attendance, setAttendance] = useState({ confirmed: 0, total: 0 })
@@ -16,45 +17,47 @@ export default function EquipoPanel() {
   const porcentaje = total ? Math.round((confirmed / total) * 100) : 0
   const UMBRAL = 75
 
+  // — Marca de inicio de tiempo (oculta) —
+  const [startTime, setStartTime] = useState(null)
+
   // — Etapas del flujo —
-  // 'pre'      = antes de empezar
-  // 'preguntas'= respondiendo preguntas
-  // 'fisica'   = etapa física (ruleta)
-  // 'done'     = completado
   const [stage, setStage] = useState('pre')
 
   // — Preguntas —
-  const MAX_QUESTIONS = 5
+  const MAX_QUESTIONS = 1
   const [correctCount, setCorrectCount] = useState(0)
 
-  // cuando lleguemos a 5 aciertos, pasamos a etapa física
+  // Cuando se alcanzan las respuestas necesarias, pasamos a física
   useEffect(() => {
     if (stage === 'preguntas' && correctCount >= MAX_QUESTIONS) {
       setStage('fisica')
     }
   }, [correctCount, stage])
 
-  // — Estado de la ruleta (lifting state) —
-  const [fisicaUsed,    setFisicaUsed]    = useState([])
-  const [fisicaRound,   setFisicaRound]   = useState(0)
+  // Inicia el desafío: registro de tiempo + paso a preguntas
+  const startDesafio = () => {
+    setStartTime(Date.now())
+    setStage('preguntas')
+  }
 
-  // cada vez que entramos en 'fisica', aumentamos la ronda
+  // — Estado de la ruleta —
+  const [fisicaUsed, setFisicaUsed] = useState([])
+  const [fisicaRound, setFisicaRound] = useState(0)
   useEffect(() => {
     if (stage === 'fisica') {
       setFisicaRound(r => r + 1)
     }
   }, [stage])
 
-  // cuando la etapa física avisa que completó un giro
-  const handleFisicaComplete = () => {
-    // reseteamos contador de preguntas
+  // Callback cuando termina cada giro
+  // `isLast === true` sólo en la décima llave
+  const handleFisicaComplete = (isLast) => {
     setCorrectCount(0)
 
-    // si ya usamos todos los 10 segmentos, marcamos 'done'
-    if (fisicaUsed.length >= 10) {
-      setStage('done')
+    if (isLast && startTime !== null) {
+      const durationMs = Date.now() - startTime
+      navigate('/fin', { state: { teamId: id, durationMs } })
     } else {
-      // de lo contrario, volvemos a preguntas
       setStage('preguntas')
     }
   }
@@ -68,18 +71,20 @@ export default function EquipoPanel() {
           </h2>
 
           <div className="equipo-panel__grid">
-            {/* QR */}
             <div className="equipo-panel__qr">
-              <QRCode value="https://desafiojaguar.zapto.org/" size={200} />
+              <QRCode
+                value="https://desafiojaguar.zapto.org/"
+                size={200}
+              />
               <p className="equipo-panel__qr-text">
-                Escanea para ir a desafiojaguar.zapto.org
+                Escanea para ir a https://desafiojaguar.zapto.org/
               </p>
             </div>
-            {/* Instrucciones */}
+
             <div className="equipo-panel__instructions-box">
               <p>
-                Bienvenido a la tercera edición del Desafío Jaguar, más
-                remasterizada y jaguarizada que nunca!!!
+                Bienvenido a la tercera edición del Desafío Jaguar,
+                más remasterizada y jaguarizada que nunca!!!
               </p>
               <p>
                 Escanea este QR para confirmar tu asistencia. El desafío solo
@@ -97,7 +102,7 @@ export default function EquipoPanel() {
           {porcentaje >= UMBRAL && (
             <button
               className="equipo-panel__start-button"
-              onClick={() => setStage('preguntas')}
+              onClick={startDesafio}
             >
               Clic para iniciar desafío… ➔
             </button>
@@ -127,19 +132,13 @@ export default function EquipoPanel() {
 
       {stage === 'fisica' && (
         <EtapaFisicaPanel
+          key={fisicaRound}              // fuerza remount en cada ronda
           teamId={id}
           usedIndices={fisicaUsed}
           onUseIndex={idx => setFisicaUsed(u => [...u, idx])}
           round={fisicaRound}
           onComplete={handleFisicaComplete}
         />
-      )}
-
-      {stage === 'done' && (
-        <div className="etapa-final">
-          <h2>¡Felicidades!</h2>
-          <p>Han completado todas las etapas.</p>
-        </div>
       )}
     </div>
   )
