@@ -101,7 +101,7 @@ export default function EtapaFisicaPanel({
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
           data={data}
-          spinDuration={0.75}
+          spinDuration={0.25}
           startingOptionIndex={0}
           disableInitialAnimation
           outerBorderColor="#444"
