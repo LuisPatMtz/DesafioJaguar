@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "pptxgenjs": "^4.0.0",
     "react": "^18.x.x",
     "react-custom-roulette": "^1.4.1",
     "react-dom": "^18.x.x",

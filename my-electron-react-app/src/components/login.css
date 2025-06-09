@@ -1,40 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;600&display=swap');
+
 .form-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    max-width: 300px;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
-    border-radius: 10px;
-  }
-  
-  input {
-    padding: 0.8rem;
-    width: 100%;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-  }
-  
-  button {
-    padding: 0.8rem 1.5rem;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error-text {
-    color: #ff4b4b;
-    font-weight: bold;
-  }
-  
+  font-family: 'Poppins', sans-serif;
+  background: rgba(0, 0, 0, 0.6); /* fondo oscuro translúcido */
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-login input {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background-color: #f2f2f2;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-login input::placeholder {
+  color: #999;
+}
+
+.form-login button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  background-color: #990000; /* rojo ISC */
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-login button:hover {
+  background-color: #FFD700; /* amarillo */
+  color: #333;
+}
+
+.error-text {
+  color: #ff6666;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: -0.5rem;
+}
