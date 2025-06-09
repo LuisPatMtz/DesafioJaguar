@@ -1,35 +1,32 @@
-/* Fondo del modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(20, 20, 20, 0.7); /* más oscuro */
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 }
 
-/* Contenedor del modal */
 .modal-content {
-  background-color: #fefefe;
-  color: #333;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  font-family: 'Poppins', 'Montserrat', sans-serif;
   padding: 2rem;
   border-radius: 14px;
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
   text-align: center;
-  font-family: 'Segoe UI', sans-serif;
-  animation: scaleIn 0.3s ease-out;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.25s ease-out;
 }
 
-/* Animación suave */
 @keyframes scaleIn {
   0% {
-    transform: scale(0.8);
+    transform: scale(0.9);
     opacity: 0;
   }
   100% {
@@ -38,42 +35,61 @@
   }
 }
 
-/* Input */
+/* Título del modal */
+.modal-content h2 {
+  font-size: 1.8rem;
+  color: #f1f1f1;
+  margin-bottom: 0.5rem;
+}
+
+/* Subtítulo */
+.modal-content p {
+  font-size: 1rem;
+  color: #bbbbbb;
+  margin-bottom: 1.5rem;
+}
+
+/* Input tiempo */
 .modal-content input {
-  width: 120px;
-  padding: 10px;
-  font-size: 1.3rem;
+  width: 140px;
+  padding: 12px;
+  font-size: 1.4rem;
   text-align: center;
-  border-radius: 6px;
-  border: 2px solid #ccc;
-  margin-top: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid #444;
+  background-color: #2a2a2a;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
 .modal-content input.input-error {
-  border-color: red;
-  background-color: #ffe6e6;
+  border-color: #ff4d4f;
+  background-color: #4e1d1d;
 }
 
 /* Botones */
 .modal-buttons {
-  margin-top: 2rem;
   display: flex;
   justify-content: center;
   gap: 1rem;
+  margin-top: 2rem;
 }
 
 .modal-buttons button {
-  padding: 10px 16px;
+  padding: 10px 20px;
   font-size: 1rem;
   border: none;
   border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: white;
+  transition: all 0.25s ease;
 }
 
 .modal-buttons button:first-child {
   background-color: #28a745;
+  color: white;
 }
 
 .modal-buttons button:first-child:disabled {
@@ -83,15 +99,5 @@
 
 .modal-buttons button:last-child {
   background-color: #dc3545;
-}
-
-.modal-content h2 {
-  margin-bottom: 0.7rem;
-  color: #111;
-}
-
-.modal-content p {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-  color: #444;
+  color: white;
 }

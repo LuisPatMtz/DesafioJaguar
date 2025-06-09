@@ -1,27 +1,27 @@
+// src/components/etapaFisica/etapaFisicaPanel.jsx
 import React, { useState, useEffect, useMemo } from 'react'
 import { Wheel } from 'react-custom-roulette'
 import './etapaFisicaPanel.css'
+import pistas from '../../data/pistasLlaves.json'
 import { verifyKey } from '../../utils/verifyKey'
 
 const SEGMENTS = [
-  'Llave 1','Llave 2','Llave 3','Llave 4',
-  'Llave 5','Llave 6',
-  'Llave 7','Llave 8'
-]
-const REAL_COLORS = [
-  '#FF6B6B','#6BCB77','#4D96FF',
-  '#FFD93D','#9D4EDD','#FF6AC1',
-  '#6BEAFF','#FF9F1C'
+  'Llave 1', 'Llave 2', 'Llave 3', 'Llave 4',
+  'Llave 5', 'Llave 6', 'Llave 7', 'Llave 8'
 ]
 
-export default function EtapaFisicaPanel({
-  teamId, usedIndices, onUseIndex, round, onComplete
-}) {
-  const [mustSpin, setMustSpin]           = useState(false)
-  const [prizeNumber, setPrizeNumber]     = useState(0)
+const REAL_COLORS = [
+  '#FF6B6B', '#6BCB77', '#4D96FF',
+  '#FFD93D', '#9D4EDD', '#FF6AC1',
+  '#6BEAFF', '#FF9F1C'
+]
+
+export default function EtapaFisicaPanel({ teamId, usedIndices, onUseIndex, round, onComplete }) {
+  const [mustSpin, setMustSpin] = useState(false)
+  const [prizeNumber, setPrizeNumber] = useState(0)
   const [currentWinner, setCurrentWinner] = useState(null)
-  const [modalType, setModalType]         = useState(null)
-  const [selectedKey, setSelectedKey]     = useState('')
+  const [modalType, setModalType] = useState(null)
+  const [selectedKey, setSelectedKey] = useState('')
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
@@ -31,8 +31,7 @@ export default function EtapaFisicaPanel({
     const available = SEGMENTS
       .map((_, i) => i)
       .filter(i => !usedIndices.includes(i))
-    
-    // Si no quedan, notificamos “última” y salimos
+
     if (!available.length) {
       onComplete(true)
       return
@@ -47,11 +46,8 @@ export default function EtapaFisicaPanel({
     setMustSpin(false)
     setCurrentWinner(prizeNumber)
 
-    // Guarda qué "llave" salió
     const choice = SEGMENTS[prizeNumber]
     setSelectedKey(choice)
-
-    // Abre el modal para pedir contraseña
     setModalType('password')
   }
 
@@ -65,9 +61,7 @@ export default function EtapaFisicaPanel({
   }
 
   const closeModal = () => {
-    // Marcamos este índice como usado
     onUseIndex(currentWinner)
-    // Si era la décima llave, avisamos con `true`
     const isLast = usedIndices.length + 1 >= SEGMENTS.length
     onComplete(isLast)
     setModalType(null)
@@ -92,9 +86,10 @@ export default function EtapaFisicaPanel({
 
   return (
     <div className="etapa-fisica-panel">
-      <h2>Etapa física</h2>
-      <h3>Equipo: {teamId}</h3>
-      <h3>Espera las indicaciones</h3>
+      <h2 className="etapa-fisica-panel__title">Etapa física</h2>
+      <h3 className="etapa-fisica-panel__subtitle">Equipo: {teamId}</h3>
+      <h3 className="etapa-fisica-panel__subtitle">Espera las indicaciones</h3>
+
       <div className="wheel-container">
         <Wheel
           key={round}
@@ -114,11 +109,11 @@ export default function EtapaFisicaPanel({
         />
       </div>
 
-      {/* modales */}
       {modalType === 'password' && (
         <div className="modal-overlay">
           <div className="modal-box">
             <h3>Introduce la contraseña para {selectedKey}</h3>
+            <p className="pista">{pistas[selectedKey]}</p>
             <input
               type="password"
               value={passwordInput}
@@ -130,6 +125,7 @@ export default function EtapaFisicaPanel({
           </div>
         </div>
       )}
+
       {modalType === 'llave' && (
         <div className="modal-overlay">
           <div className="modal-box">

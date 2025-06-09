@@ -14,18 +14,26 @@ html, body {
   align-items: center;
   padding: 2rem 1rem;
   font-family: 'Montserrat', sans-serif;
-  overflow-y: auto;      /* permite scroll vertical si el contenido excede */
+  overflow-y: auto;
 }
 
-/* 2. Título centrado arriba */
-.equipo-panel__title {
-  font-size: clamp(1.75rem, 5vw, 2.5rem);
-  margin-bottom: 1.5rem;
-  color: #222;
+.equipo-panel__header {
+  margin-bottom: 2rem;
   text-align: center;
 }
 
-/* 3. Grid para QR + caja de instrucciones */
+.equipo-panel__title {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.equipo-panel__subtitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #444;
+}
+
 .equipo-panel__grid {
   display: flex;
   gap: 2rem;
@@ -35,7 +43,6 @@ html, body {
   margin-bottom: 2rem;
 }
 
-/* 4. Estilos QR: fondo blanco, padding, tamaño fijo */
 .equipo-panel__qr {
   flex: 0 0 300px;
   background: #fff;
@@ -48,7 +55,7 @@ html, body {
 
 .equipo-panel__qr svg {
   width: 100% !important;
-  height: auto  !important;
+  height: auto !important;
 }
 
 .equipo-panel__qr-text {
@@ -58,7 +65,6 @@ html, body {
   text-align: center;
 }
 
-/* 5. Caja de instrucciones: semitransparente, texto blanco, alineado a la izquierda */
 .equipo-panel__instructions-box {
   flex: 0 0 300px;
   background: rgba(0, 0, 0, 0.4);
@@ -66,35 +72,39 @@ html, body {
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 8px;
   color: #fff;
-  text-align: justify;      /* alineación normal para evitar grandes espacios */
+  text-align: justify;
   line-height: 1.5;
-  hyphens: auto;         /* cortes de palabra automáticos */
   letter-spacing: normal;
+  hyphens: auto;
 }
 
-/* 6. Asistencia en flujo normal, sin posicionamiento absoluto */
-.equipo-panel__attendance-wrapper {
-  position: static;
-  margin-top: 1.5rem;
-  text-align: center;
+.equipo-panel__start-button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #b80000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.equipo-panel__attendance-wrapper button {
-  margin-top: 0.5rem;
+.equipo-panel__start-button:hover {
+  background-color: #880000;
 }
 
-/* 7. Botón de inicio (si aplica) en flujo normal */
-.equipo-panel__start {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-/* 8. Panel de preguntas */
-.equipo-panel__question {
+.equipo-panel__question-box {
   margin-top: 2rem;
 }
 
-/* 9. Ajustes responsive para pantallas pequeñas */
+.equipo-panel__score {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
 @media (max-width: 700px) {
   .equipo-panel__grid {
     flex-direction: column;

@@ -11,36 +11,39 @@ export default function EquipoPanel() {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  // — Asistencia —
   const [attendance, setAttendance] = useState({ confirmed: 0, total: 0 })
   const { confirmed, total } = attendance
   const porcentaje = total ? Math.round((confirmed / total) * 100) : 0
   const UMBRAL = 75
 
-  // — Marca de inicio de tiempo (oculta) —
   const [startTime, setStartTime] = useState(null)
-
-  // — Etapas del flujo —
   const [stage, setStage] = useState('pre')
 
-  // — Preguntas —
-  const MAX_QUESTIONS = 1
+  const MAX_QUESTIONS = 5
   const [correctCount, setCorrectCount] = useState(0)
 
-  // Cuando se alcanzan las respuestas necesarias, pasamos a física
+  const [countdown, setCountdown] = useState(null)
+
   useEffect(() => {
     if (stage === 'preguntas' && correctCount >= MAX_QUESTIONS) {
       setStage('fisica')
     }
   }, [correctCount, stage])
 
-  // Inicia el desafío: registro de tiempo + paso a preguntas
+  useEffect(() => {
+    if (countdown !== null && countdown > 0) {
+      const timer = setTimeout(() => setCountdown(c => c - 1), 1000)
+      return () => clearTimeout(timer)
+    } else if (countdown === 0) {
+      setStartTime(Date.now())
+      setStage('preguntas')
+    }
+  }, [countdown])
+
   const startDesafio = () => {
-    setStartTime(Date.now())
-    setStage('preguntas')
+    setCountdown(5)
   }
 
-  // — Estado de la ruleta —
   const [fisicaUsed, setFisicaUsed] = useState([])
   const [fisicaRound, setFisicaRound] = useState(0)
   useEffect(() => {
@@ -49,8 +52,6 @@ export default function EquipoPanel() {
     }
   }, [stage])
 
-  // Callback cuando termina cada giro
-  // `isLast === true` sólo en la décima llave
   const handleFisicaComplete = (isLast) => {
     setCorrectCount(0)
 
@@ -67,15 +68,12 @@ export default function EquipoPanel() {
       {stage === 'pre' && (
         <>
           <h2 className="equipo-panel__title">
-            Bienvenido, equipo: <span className="equipo-panel__id">{id}</span>
+            Bienvenido <span className="equipo-panel__id">{id}</span>, buena suerte
           </h2>
 
           <div className="equipo-panel__grid">
             <div className="equipo-panel__qr">
-              <QRCode
-                value="https://desafiojaguar.zapto.org/"
-                size={200}
-              />
+              <QRCode value="https://desafiojaguar.zapto.org/" size={200} />
               <p className="equipo-panel__qr-text">
                 Escanea para ir a https://desafiojaguar.zapto.org/
               </p>
@@ -90,22 +88,22 @@ export default function EquipoPanel() {
                 Escanea este QR para confirmar tu asistencia. El desafío solo
                 comenzará cuando el 75 % de tu equipo esté presente.
               </p>
-              <p>Sé paciente.</p>
+              <p>¡Sé paciente y prepárate para la acción!</p>
             </div>
           </div>
 
-          <AsistenciaStatus
-            teamId={id}
-            onAttendanceChange={setAttendance}
-          />
+          <AsistenciaStatus teamId={id} onAttendanceChange={setAttendance} />
 
           {porcentaje >= UMBRAL && (
-            <button
-              className="equipo-panel__start-button"
-              onClick={startDesafio}
-            >
+            <button className="equipo-panel__start-button" onClick={startDesafio}>
               Clic para iniciar desafío… ➔
             </button>
+          )}
+
+          {countdown !== null && (
+            <div className="equipo-panel__countdown">
+              Iniciando en: <strong>{countdown}</strong>
+            </div>
           )}
         </>
       )}
@@ -132,7 +130,7 @@ export default function EquipoPanel() {
 
       {stage === 'fisica' && (
         <EtapaFisicaPanel
-          key={fisicaRound}              // fuerza remount en cada ronda
+          key={fisicaRound}
           teamId={id}
           usedIndices={fisicaUsed}
           onUseIndex={idx => setFisicaUsed(u => [...u, idx])}
