@@ -1,4 +1,3 @@
-// src/pages/Fin.jsx
 import React, { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './EquipoPanel.css'

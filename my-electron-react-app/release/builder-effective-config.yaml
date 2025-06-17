@@ -1,9 +1,22 @@
 directories:
   output: release
   buildResources: build
-appId: com.myapp.electronvite
+appId: com.desafiojaguar.app
+productName: Desafío jaguar
 files:
   - filter:
       - dist/**/*
       - electron/**/*
+extraResources:
+  - from: electron/icono.ico
+    to: icono.ico
+win:
+  icon: electron/icono.ico
+  target: nsis
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: electron/icono.ico
+  uninstallerIcon: electron/icono.ico
+  shortcutName: Desafío jaguar
 electronVersion: 30.5.1

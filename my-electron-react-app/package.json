@@ -1,6 +1,8 @@
 {
-  "name": "my-electron-react-app",
-  "version": "1.0.0",
+  "name": "desafio-jaguar",
+  "version": "29.08.10",
+  "description": "Aplicación oficial para la competencia Desafío Jaguar",
+  "author": "Luis Mauricio Pat Martinez",
   "main": "electron/main.js",
   "scripts": {
     "dev": "concurrently -k \"cross-env NODE_ENV=development vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
@@ -8,14 +10,32 @@
     "preview": "vite preview"
   },
   "build": {
-    "appId": "com.myapp.electronvite",
+    "appId": "com.desafiojaguar.app",
+    "productName": "Desafío jaguar",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
       "electron/**/*"
-    ]
+    ],
+    "extraResources": [
+      {
+        "from": "electron/icono.ico",
+        "to": "icono.ico"
+      }
+    ],
+    "win": {
+      "icon": "electron/icono.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/icono.ico",
+      "uninstallerIcon": "electron/icono.ico",
+      "shortcutName": "Desafío jaguar"
+    }
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
@@ -31,7 +51,7 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.x.x",
     "electron": "^30.x.x",
-    "electron-builder": "^24.x.x",
+    "electron-builder": "^24.13.3",
     "vite": "^5.x.x",
     "wait-on": "^7.2.0"
   }

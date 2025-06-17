@@ -1,8 +1,5 @@
-// src/pages/EquipoPanel.jsx
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import QRCode from 'react-qr-code'
-import AsistenciaStatus from '../components/asistenciaStatus'
 import RandomQuestionPanel from '../components/panelPreguntas'
 import EtapaFisicaPanel from '../components/etapaFisica/etapaFisicaPanel'
 import './EquipoPanel.css'
@@ -11,41 +8,60 @@ export default function EquipoPanel() {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const [attendance, setAttendance] = useState({ confirmed: 0, total: 0 })
-  const { confirmed, total } = attendance
-  const porcentaje = total ? Math.round((confirmed / total) * 100) : 0
-  const UMBRAL = 75
-
   const [startTime, setStartTime] = useState(null)
   const [stage, setStage] = useState('pre')
 
   const MAX_QUESTIONS = 5
   const [correctCount, setCorrectCount] = useState(0)
 
-  const [countdown, setCountdown] = useState(null)
+  // Estado para el modal de cuenta regresiva
+  const [showCountdown, setShowCountdown] = useState(false)
+  const [countdown, setCountdown] = useState(5)
 
+  // Actualiza la etapa fssica
+  const [fisicaUsed, setFisicaUsed] = useState([])
+  const [fisicaRound, setFisicaRound] = useState(0)
+
+  // Muestra modal e inicia cuenta regresiva
+  const startDesafio = () => {
+    setShowCountdown(true)
+    setCountdown(5)
+  }
+
+  // Sincroniza contador
+  useEffect(() => {
+    let timer
+    if (showCountdown) {
+      setCountdown(5)
+      let counter = 5
+      timer = setInterval(() => {
+        counter--
+        setCountdown(counter)
+        if (counter <= 0) clearInterval(timer)
+      }, 1000)
+    }
+    return () => clearInterval(timer)
+  }, [showCountdown])
+
+  // Al terminar la cuenta, inicia preguntas
+  useEffect(() => {
+    if (showCountdown && countdown === 0) {
+      setTimeout(() => {
+        setShowCountdown(false)
+        setStartTime(Date.now())
+        setStage('preguntas')
+      }, 500) 
+    }
+  }, [showCountdown, countdown])
+
+  // Avanza a etapa física cuando se completan las preguntas
   useEffect(() => {
     if (stage === 'preguntas' && correctCount >= MAX_QUESTIONS) {
       setStage('fisica')
     }
   }, [correctCount, stage])
 
-  useEffect(() => {
-    if (countdown !== null && countdown > 0) {
-      const timer = setTimeout(() => setCountdown(c => c - 1), 1000)
-      return () => clearTimeout(timer)
-    } else if (countdown === 0) {
-      setStartTime(Date.now())
-      setStage('preguntas')
-    }
-  }, [countdown])
-
-  const startDesafio = () => {
-    setCountdown(5)
-  }
-
-  const [fisicaUsed, setFisicaUsed] = useState([])
-  const [fisicaRound, setFisicaRound] = useState(0)
+  // Incrementa la ronda física al iniciar esta etapa
   useEffect(() => {
     if (stage === 'fisica') {
       setFisicaRound(r => r + 1)
@@ -63,56 +79,65 @@ export default function EquipoPanel() {
     }
   }
 
+  useEffect(() => {
+    if (showCountdown) {
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.classList.remove('modal-open')
+    }
+    return () => document.body.classList.remove('modal-open')
+  }, [showCountdown])
+
   return (
     <div className="equipo-panel">
+      {showCountdown && (
+        <div className="countdown-modal">
+          <div className="countdown-content">
+            <h2>¡Prepárate!</h2>
+            <div className="countdown-number">
+              {countdown > 0 ? countdown : "¡A jugar!"}
+            </div>
+          </div>
+        </div>
+      )}
+
       {stage === 'pre' && (
         <>
           <h2 className="equipo-panel__title">
-            Bienvenido <span className="equipo-panel__id">{id}</span>, buena suerte
+            Bienvenido <span className="equipo-panel__id">{id}</span> al Desafío Jaguar 3.0!
           </h2>
-
-          <div className="equipo-panel__grid">
-            <div className="equipo-panel__qr">
-              <QRCode value="https://desafiojaguar.zapto.org/" size={200} />
-              <p className="equipo-panel__qr-text">
-                Escanea para ir a https://desafiojaguar.zapto.org/
-              </p>
-            </div>
-
-            <div className="equipo-panel__instructions-box">
-              <p>
-                Bienvenido a la tercera edición del Desafío Jaguar,
-                más remasterizada y jaguarizada que nunca!!!
-              </p>
-              <p>
-                Escanea este QR para confirmar tu asistencia. El desafío solo
-                comenzará cuando el 75 % de tu equipo esté presente.
-              </p>
-              <p>¡Sé paciente y prepárate para la acción!</p>
-            </div>
+          <div className="equipo-panel__instructions-box">
+            <p>
+              Prepárate para una experiencia unica e inigualable: primero, pondrás a prueba tu conocimiento obtenido por las sabias clases de tus maestros favoritos, ¿O no?.
+            </p>
+            <p>
+              Al hacer clic en <em>“Clic aqui para iniciar desafio…➔”</em>, se activará el cronómetro y tendrás que responder cada pregunta de forma correcta y rápida. Sé estratégico: la eficiencia cuenta.
+            </p>
+            <p>
+              Una vez que completes las preguntas, pasarás directamente a la <strong>etapa física</strong>, donde aparecera una ruleta con 8 llaves. Cada opcion contendrá una pista que te llevará a una llave escondida en la escuela.
+            </p>
+            <p>
+              Tendras pistas de donde encontrar las llaves, pero cuidado: si fallas tres veces, obtendras una penalizacion que se sumará a tu tiempo total. ¡No te rindas!
+            </p>
+            <p>
+              Tu tiempo total será registrado desde el inicio hasta que completes la ruleta. ¡El equipo más rápido será el ganador!
+            </p>
+            <p>
+              Consejo: Respira hondo, mantén la concentración y trabaja en equipo. ¡Mucha suerte, y que comience la aventura!
+            </p>
           </div>
 
-          <AsistenciaStatus teamId={id} onAttendanceChange={setAttendance} />
-
-          {porcentaje >= UMBRAL && (
-            <button className="equipo-panel__start-button" onClick={startDesafio}>
-              Clic para iniciar desafío… ➔
-            </button>
-          )}
-
-          {countdown !== null && (
-            <div className="equipo-panel__countdown">
-              Iniciando en: <strong>{countdown}</strong>
-            </div>
-          )}
+          <button className="equipo-panel__start-button" onClick={startDesafio} disabled={showCountdown}>
+            Clic aqui para iniciar desafio…➔
+          </button>
         </>
       )}
 
       {stage === 'preguntas' && (
         <>
-          <h2 className="equipo-panel__title">Etapa de pregunta</h2>
+          <h2 className="equipo-panel__title">🧠 Etapa academica 🧐</h2>
           <p className="equipo-panel__subtitle">
-            Responde de manera correcta la pregunta
+            Demuestren que son unos masters: respondan correctamente las 5 preguntas.
           </p>
 
           <div className="equipo-panel__question-box">
@@ -123,20 +148,26 @@ export default function EquipoPanel() {
           </div>
 
           <div className="equipo-panel__score">
-            Aciertos: {correctCount} / {MAX_QUESTIONS}
+            Llevas {correctCount} respuestas correctas de {MAX_QUESTIONS}
           </div>
         </>
       )}
 
       {stage === 'fisica' && (
-        <EtapaFisicaPanel
-          key={fisicaRound}
-          teamId={id}
-          usedIndices={fisicaUsed}
-          onUseIndex={idx => setFisicaUsed(u => [...u, idx])}
-          round={fisicaRound}
-          onComplete={handleFisicaComplete}
-        />
+        <>
+          <h2 className="equipo-panel__title">🏃‍♂️ Encuentra las llaves</h2>
+          <p className="equipo-panel__subtitle">
+            Completen la ruleta en el menor tiempo posible.
+          </p>
+          <EtapaFisicaPanel
+            key={fisicaRound}
+            teamId={id}
+            usedIndices={fisicaUsed}
+            onUseIndex={idx => setFisicaUsed(u => [...u, idx])}
+            round={fisicaRound}
+            onComplete={handleFisicaComplete}
+          />
+        </>
       )}
     </div>
   )

@@ -2,7 +2,7 @@
 
 .form-login {
   font-family: 'Poppins', sans-serif;
-  background: rgba(0, 0, 0, 0.6); /* fondo oscuro translúcido */
+  background: rgba(0, 0, 0, 0.6); 
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -31,7 +31,7 @@
 .form-login button {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  background-color: #990000; /* rojo ISC */
+  background-color: #990000; 
   color: white;
   padding: 0.75rem;
   border: none;
@@ -41,7 +41,7 @@
 }
 
 .form-login button:hover {
-  background-color: #FFD700; /* amarillo */
+  background-color: #FFD700; 
   color: #333;
 }
 

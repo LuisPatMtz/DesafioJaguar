@@ -1,4 +1,3 @@
-// src/components/etapaFisica/etapaFisicaPanel.jsx
 import React, { useState, useEffect, useMemo } from 'react'
 import { Wheel } from 'react-custom-roulette'
 import './etapaFisicaPanel.css'
@@ -86,10 +85,6 @@ export default function EtapaFisicaPanel({ teamId, usedIndices, onUseIndex, roun
 
   return (
     <div className="etapa-fisica-panel">
-      <h2 className="etapa-fisica-panel__title">Etapa física</h2>
-      <h3 className="etapa-fisica-panel__subtitle">Equipo: {teamId}</h3>
-      <h3 className="etapa-fisica-panel__subtitle">Espera las indicaciones</h3>
-
       <div className="wheel-container">
         <Wheel
           key={round}
@@ -112,7 +107,7 @@ export default function EtapaFisicaPanel({ teamId, usedIndices, onUseIndex, roun
       {modalType === 'password' && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h3>Introduce la contraseña para {selectedKey}</h3>
+            <h3>Introduce la contraseña de la {selectedKey}</h3>
             <p className="pista">{pistas[selectedKey]}</p>
             <input
               type="password"

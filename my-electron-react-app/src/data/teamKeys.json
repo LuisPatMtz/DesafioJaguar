@@ -1,12 +1,112 @@
 {
+  "rojo": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+    "azul_celeste": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+    "rosa": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  } ,
+  "amarillo": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+    "blanco": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+    "cafe": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+  "negro": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+  "verde": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+  "morado": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
+  "azul_fuerte": {
+    "Llave 1": "Jaguarundi01",
+    "Llave 2": "Ocelote02",
+    "Llave 3": "Tucan03",
+    "Llave 4": "Guacamaya04",
+    "Llave 5": "Venado05",
+    "Llave 6": "Cocodrilo06",
+    "Llave 7": "Colibri07",
+    "Llave 8": "Armadillo08"
+  },
   "prueba": {
-    "Llave 1": "prueba",
-    "Llave 2": "prueba",
-    "Llave 3": "prueba",
-    "Llave 4": "prueba",
-    "Llave 5": "prueba",
-    "Llave 6": "prueba",
-      "Llave 7": "prueba",
-    "Llave 8": "prueba"
+    "Llave 1": "PRUEBA",
+    "Llave 2": "PRUEBA",
+    "Llave 3": "PRUEBA",
+    "Llave 4": "PRUEBA",
+    "Llave 5": "PRUEBA",
+    "Llave 6": "PRUEBA",
+    "Llave 7": "PRUEBA",
+    "Llave 8": "PRUEBA"
   }
 }
